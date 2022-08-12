@@ -16,7 +16,7 @@ class AuthRepositoryImpl : AuthRepository {
     override suspend fun registerUser(email: String, passwordHash: String): Unit = dbQuery {
         User.new {
             this.email = email
-            this.password = password
+            this.password = passwordHash
         }
     }
 

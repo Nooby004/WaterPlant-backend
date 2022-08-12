@@ -1,17 +1,21 @@
 package com.mlallemant
 
 
+import com.typesafe.config.ConfigFactory
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
+import io.ktor.server.config.*
 import org.flywaydb.core.Flyway
 import org.jetbrains.exposed.sql.Database
 
 
 object DatabaseFactory {
 
-    private const val dbUrl = "jdbc:postgresql://localhost:5432/postgres"
-    private const val dbUser = "root"
-    private const val dbPassword = "password"
+    private val appConfig = HoconApplicationConfig(ConfigFactory.load())
+    private val dbDriver = appConfig.property("db.driver").getString()
+    private val dbUrl = appConfig.property("db.url").getString()
+    private val dbUser = appConfig.property("db.user").getString()
+    private val dbPassword = appConfig.property("db.password").getString()
 
     fun init() {
         Database.connect(hikari())
@@ -21,7 +25,7 @@ object DatabaseFactory {
 
     private fun hikari(): HikariDataSource {
         val config = HikariConfig()
-        config.driverClassName = "org.postgresql.Driver"
+        config.driverClassName = dbDriver
         config.jdbcUrl = dbUrl
         config.username = dbUser
         config.password = dbPassword
