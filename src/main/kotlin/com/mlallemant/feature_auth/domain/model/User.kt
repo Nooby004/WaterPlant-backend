@@ -9,6 +9,7 @@ import org.jetbrains.exposed.dao.id.IntIdTable
 object UserTable : IntIdTable(name = "users") {
     val email = varchar(name = "email", length = 100)
     val password = varchar(name = "password", length = 100)
+    val uuid = varchar(name = "uuid", length = 100)
 }
 
 class User(id: EntityID<Int>) : IntEntity(id) {
@@ -16,5 +17,7 @@ class User(id: EntityID<Int>) : IntEntity(id) {
 
     var email by UserTable.email
     var password by UserTable.password
+    var uuid by UserTable.uuid
 }
+
 
