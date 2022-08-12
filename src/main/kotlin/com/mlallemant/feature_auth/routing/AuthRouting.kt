@@ -1,6 +1,7 @@
 package com.mlallemant.feature_auth.routing
 
 import com.mlallemant.core.data.ErrorResponse
+import com.mlallemant.core.data.SuccessResponse
 import com.mlallemant.core.jwt.JWT
 import com.mlallemant.feature_auth.domain.use_case.AuthUseCases
 import io.ktor.http.*
@@ -25,7 +26,7 @@ fun Application.configureAuthRouting() {
             try {
                 val response =
                     authUseCases.registerUserUseCase(creds.email, BCrypt.hashpw(creds.password, BCrypt.gensalt()))
-                call.respond(response)
+                call.respond(SuccessResponse(response))
             } catch (e: Exception) {
                 call.respond(HttpStatusCode.Conflict, ErrorResponse("Account already exist"))
             }
