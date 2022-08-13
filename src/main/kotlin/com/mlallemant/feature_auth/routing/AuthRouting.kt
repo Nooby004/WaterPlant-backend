@@ -35,10 +35,18 @@ fun Application.configureAuthRouting() {
             val creds = call.receive<LoginRegister>()
             val user = authUseCases.getUserByEmailUseCase(creds.email)
             if (user == null || !BCrypt.checkpw(creds.password, user.password)) {
-                call.respond(HttpStatusCode.NotFound)
+                call.respond(HttpStatusCode.NotFound, ErrorResponse("User not found"))
             } else {
                 val token = JWT.createJwtToken(user.email)
-                call.respond(hashMapOf("token" to token))
+                call.respond(
+                    SuccessResponse(
+                        hashMapOf(
+                            "token" to token,
+                            "email" to user.email,
+                            "id" to user.uuid
+                        )
+                    )
+                )
             }
         }
     }
