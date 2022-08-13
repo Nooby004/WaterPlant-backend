@@ -2,12 +2,9 @@ package com.mlallemant.feature_plant.data.repository
 
 import com.mlallemant.core.data.Transaction.dbQuery
 import com.mlallemant.feature_auth.domain.model.User
-import com.mlallemant.feature_plant.domain.model.Plant
-import com.mlallemant.feature_plant.domain.model.PlantData
-import com.mlallemant.feature_plant.domain.model.PlantTable
-import com.mlallemant.feature_plant.domain.model.WaterPlant
+import com.mlallemant.feature_plant.domain.model.*
 import com.mlallemant.feature_plant.domain.repository.PlantRepository
-import com.mlallemant.feature_plant.routing.PlantParameter
+import com.mlallemant.feature_plant.routing.SavePlantRequest
 import com.mlallemant.feature_plant.routing.WaterPlantParameter
 
 class PlantRepositoryImpl : PlantRepository {
@@ -26,24 +23,24 @@ class PlantRepositoryImpl : PlantRepository {
         }.firstOrNull()
     }
 
-    override suspend fun upsertPlant(plantParameter: PlantParameter, uuid: String, user: User): Unit = dbQuery {
-        if (plantParameter.uuid == null) {
+    override suspend fun upsertPlant(savePlantRequest: SavePlantRequest, user: User): Unit = dbQuery {
+        val plant = Plant.find {
+            (PlantTable.user eq user.id)
+            (PlantTable.uuid eq user.uuid)
+        }.firstOrNull()
+
+        if (plant == null) {
             // creation
             Plant.new {
                 this.user = user
-                this.name = plantParameter.name
-                this.uuid = uuid
-                this.waterFrequency = plantParameter.waterFrequency
-                this.pictureUrl = plantParameter.pictureUrl
+                this.uuid = savePlantRequest.uuid
+                this.name = savePlantRequest.name
+                this.waterFrequency = savePlantRequest.waterFrequency
+                this.pictureUrl = savePlantRequest.pictureUrl
             }
         } else {
             // update
-            val plant = Plant.find {
-                (PlantTable.user eq user.id)
-                (PlantTable.uuid eq uuid)
-            }.firstOrNull()
-
-            plant?.let {
+            plant.let {
                 it.name = plant.name
                 it.pictureUrl = plant.pictureUrl
                 it.waterFrequency = plant.waterFrequency

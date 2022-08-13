@@ -10,7 +10,7 @@ import com.mlallemant.feature_plant.domain.repository.PlantRepository
 import com.mlallemant.feature_plant.domain.use_case.AddWateringUseCase
 import com.mlallemant.feature_plant.domain.use_case.GetPlantListUseCase
 import com.mlallemant.feature_plant.domain.use_case.PlantUseCases
-import com.mlallemant.feature_plant.domain.use_case.UpsertPlantUseCase
+import com.mlallemant.feature_plant.domain.use_case.SavePlantUseCase
 import org.koin.core.module.dsl.bind
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
@@ -33,7 +33,7 @@ val appModule = module {
     single {
         PlantUseCases(
             getPlantListUseCase = GetPlantListUseCase(get()),
-            upsertPlantUseCase = UpsertPlantUseCase(get()),
+            savePlantUseCase = SavePlantUseCase(get()),
             addWateringUseCase = AddWateringUseCase(get())
         )
     }
