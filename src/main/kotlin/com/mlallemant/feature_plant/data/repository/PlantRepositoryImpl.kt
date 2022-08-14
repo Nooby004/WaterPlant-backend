@@ -5,7 +5,7 @@ import com.mlallemant.feature_auth.domain.model.User
 import com.mlallemant.feature_plant.domain.model.*
 import com.mlallemant.feature_plant.domain.repository.PlantRepository
 import com.mlallemant.feature_plant.routing.SavePlantRequest
-import com.mlallemant.feature_plant.routing.WaterPlantParameter
+import com.mlallemant.feature_plant.routing.AddWaterPlantRequest
 
 class PlantRepositoryImpl : PlantRepository {
 
@@ -16,17 +16,30 @@ class PlantRepositoryImpl : PlantRepository {
 
     }
 
-    override suspend fun getPlant(user: User, uuid: String): Plant? = dbQuery {
+    override suspend fun getPlant(user: User, uuid: String): PlantData? = dbQuery {
         Plant.find {
             (PlantTable.user eq user.id)
             (PlantTable.uuid eq uuid)
-        }.firstOrNull()
+        }.firstOrNull()?.toData()
     }
 
-    override suspend fun upsertPlant(savePlantRequest: SavePlantRequest, user: User): Unit = dbQuery {
+    override suspend fun deletePlant(user: User, uuid: String) = dbQuery {
+       val plant = Plant.find {
+            (PlantTable.user eq user.id)
+            (PlantTable.uuid eq uuid)
+        }.firstOrNull() ?: throw Exception("Can't delete an unknown plant")
+
+        plant.waterPlants.forEach{
+            it.delete()
+        }
+
+        plant.delete()
+    }
+
+    override suspend fun savePlant(savePlantRequest: SavePlantRequest, user: User): Unit = dbQuery {
         val plant = Plant.find {
             (PlantTable.user eq user.id)
-            (PlantTable.uuid eq user.uuid)
+            (PlantTable.uuid eq savePlantRequest.uuid)
         }.firstOrNull()
 
         if (plant == null) {
@@ -41,19 +54,25 @@ class PlantRepositoryImpl : PlantRepository {
         } else {
             // update
             plant.let {
-                it.name = plant.name
-                it.pictureUrl = plant.pictureUrl
-                it.waterFrequency = plant.waterFrequency
+                it.name = savePlantRequest.name
+                it.pictureUrl = savePlantRequest.pictureUrl
+                it.waterFrequency = savePlantRequest.waterFrequency
                 it.flush()
             }
         }
     }
 
-    override suspend fun addWatering(waterPlantParameter: WaterPlantParameter, plant: Plant): Unit = dbQuery {
+    override suspend fun addWatering(user: User, addWaterPlantRequest: AddWaterPlantRequest): Unit = dbQuery {
+        val plant = Plant.find {
+            (PlantTable.user eq user.id)
+            (PlantTable.uuid eq addWaterPlantRequest.uuid)
+        }.firstOrNull() ?: throw Exception("Can't watering an unknown plant")
+
+
         WaterPlant.new {
             this.plant = plant
-            this.pictureUrl = waterPlantParameter.pictureUrl
-            this.creationDate = waterPlantParameter.creationDate
+            this.pictureUrl = addWaterPlantRequest.pictureUrl
+            this.creationDate = addWaterPlantRequest.creationDate
         }
     }
 }

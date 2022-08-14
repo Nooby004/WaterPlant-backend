@@ -7,10 +7,7 @@ import com.mlallemant.feature_auth.domain.use_case.GetUserByEmailUseCase
 import com.mlallemant.feature_auth.domain.use_case.RegisterUserUseCase
 import com.mlallemant.feature_plant.data.repository.PlantRepositoryImpl
 import com.mlallemant.feature_plant.domain.repository.PlantRepository
-import com.mlallemant.feature_plant.domain.use_case.AddWateringUseCase
-import com.mlallemant.feature_plant.domain.use_case.GetPlantListUseCase
-import com.mlallemant.feature_plant.domain.use_case.PlantUseCases
-import com.mlallemant.feature_plant.domain.use_case.SavePlantUseCase
+import com.mlallemant.feature_plant.domain.use_case.*
 import org.koin.core.module.dsl.bind
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
@@ -34,7 +31,9 @@ val appModule = module {
         PlantUseCases(
             getPlantListUseCase = GetPlantListUseCase(get()),
             savePlantUseCase = SavePlantUseCase(get()),
-            addWateringUseCase = AddWateringUseCase(get())
+            addWateringUseCase = AddWateringUseCase(get()),
+            getPlantUseCase = GetPlantUseCase(get()),
+            deletePlantUseCase = DeletePlantUseCase(get())
         )
     }
 }

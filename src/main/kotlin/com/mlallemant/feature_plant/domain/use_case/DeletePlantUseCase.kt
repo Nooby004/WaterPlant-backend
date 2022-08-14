@@ -1,13 +1,13 @@
 package com.mlallemant.feature_plant.domain.use_case
 
 import com.mlallemant.feature_auth.domain.model.User
+import com.mlallemant.feature_plant.domain.model.PlantData
 import com.mlallemant.feature_plant.domain.repository.PlantRepository
-import com.mlallemant.feature_plant.routing.SavePlantRequest
 
-class SavePlantUseCase(
+class DeletePlantUseCase (
     private val repository: PlantRepository
 ) {
-    suspend operator fun invoke(param: SavePlantRequest, user: User) {
-        return repository.savePlant(param, user)
+    suspend operator fun invoke(user: User, uuid: String) {
+        return repository.deletePlant(user, uuid)
     }
 }
