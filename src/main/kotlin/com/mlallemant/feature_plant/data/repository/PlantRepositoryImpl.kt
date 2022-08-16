@@ -1,18 +1,22 @@
 package com.mlallemant.feature_plant.data.repository
 
 import com.mlallemant.core.data.Transaction.dbQuery
+import com.mlallemant.core.extension.sortWateringDescending
 import com.mlallemant.feature_auth.domain.model.User
-import com.mlallemant.feature_plant.domain.model.*
+import com.mlallemant.feature_plant.domain.model.Plant
+import com.mlallemant.feature_plant.domain.model.PlantData
+import com.mlallemant.feature_plant.domain.model.PlantTable
+import com.mlallemant.feature_plant.domain.model.WaterPlant
 import com.mlallemant.feature_plant.domain.repository.PlantRepository
-import com.mlallemant.feature_plant.routing.SavePlantRequest
 import com.mlallemant.feature_plant.routing.AddWaterPlantRequest
+import com.mlallemant.feature_plant.routing.SavePlantRequest
 
 class PlantRepositoryImpl : PlantRepository {
 
     override suspend fun getPlantList(user: User): List<PlantData> = dbQuery {
         Plant.find {
             (PlantTable.user eq user.id)
-        }.toList().map { it.toData() }
+        }.toList().map { it.toData().sortWateringDescending() }
 
     }
 
@@ -20,16 +24,16 @@ class PlantRepositoryImpl : PlantRepository {
         Plant.find {
             (PlantTable.user eq user.id)
             (PlantTable.uuid eq uuid)
-        }.firstOrNull()?.toData()
+        }.firstOrNull()?.toData()?.sortWateringDescending()
     }
 
     override suspend fun deletePlant(user: User, uuid: String) = dbQuery {
-       val plant = Plant.find {
+        val plant = Plant.find {
             (PlantTable.user eq user.id)
             (PlantTable.uuid eq uuid)
         }.firstOrNull() ?: throw Exception("Can't delete an unknown plant")
 
-        plant.waterPlants.forEach{
+        plant.waterPlants.forEach {
             it.delete()
         }
 
