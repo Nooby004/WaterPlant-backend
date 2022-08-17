@@ -21,9 +21,6 @@ data class SavePlantRequest(val uuid: String, val name: String, val waterFrequen
 @Serializable
 data class AddWaterPlantRequest(val uuid: String, val creationDate: String, val pictureUrl: String)
 
-@Serializable
-data class GetPlantRequest(val uuid: String)
-
 fun Application.configurePlantRouting() {
 
     val plantUseCases: PlantUseCases by inject()
