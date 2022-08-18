@@ -4,7 +4,6 @@ import com.mlallemant.core.data.ErrorResponse
 import com.mlallemant.core.data.SuccessResponse
 import com.mlallemant.core.extension.userEmail
 import com.mlallemant.feature_auth.domain.use_case.AuthUseCases
-import com.mlallemant.feature_plant.domain.model.WaterPlantTable.plant
 import com.mlallemant.feature_plant.domain.use_case.PlantUseCases
 import io.ktor.http.*
 import io.ktor.server.application.*
@@ -102,7 +101,7 @@ fun Application.configurePlantRouting() {
                 }
 
                 val param = call.receive<AddWaterPlantRequest>()
-               val response = plantUseCases.addWateringUseCase(param, user)
+                val response = plantUseCases.addWateringUseCase(param, user)
 
                 call.respond(SuccessResponse(response))
             }
