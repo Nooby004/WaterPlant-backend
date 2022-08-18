@@ -31,37 +31,34 @@ fun Application.main() {
 
             log.debug("Start cron task")
 
+            // retrieve all users
             val users = authUseCases.getAllUsers()
 
             if (users.isNotEmpty()) {
-                users.forEach { user ->
 
-                    val plantNameList: ArrayList<String> = arrayListOf()
+                // loop over it
+                users.forEach { user ->
 
                     val plants = plantUseCases.getPlantListUseCase(user)
                     if (plants.isNotEmpty()) {
                         plants.forEach { plant ->
                             if (WateringUtils.getNextWateringDay(plant) <= 0L) {
-                                plantNameList.add(plant.name)
-                            }
-                        }
-
-                        if (plantNameList.isNotEmpty()) {
-                            val isSuccess = oneSignalService.sendNotification(
-                                Notification(
-                                    includeExternalUserIds = listOf(user.uuid),
-                                    headings = NotificationMessage(
-                                        en = "Your plants need you",
-                                        fr = "Vos plantes ont besoin de vous"
-                                    ),
-                                    contents = NotificationMessage(
-                                        en = plantNameList.joinToString(", "),
-                                        fr = plantNameList.joinToString(", ")
-                                    ),
-                                    appId = appId
+                                val isSuccess = oneSignalService.sendNotification(
+                                    Notification(
+                                        includeExternalUserIds = listOf(user.uuid),
+                                        headings = NotificationMessage(
+                                            en = "Your plant need you",
+                                            fr = "Yoo ma caille !"
+                                        ),
+                                        contents = NotificationMessage(
+                                            en = "Please, water " + plant.name,
+                                            fr = plant.name + " va crever si tu l'arroses pas !"
+                                        ),
+                                        appId = appId
+                                    )
                                 )
-                            )
-                            log.debug("Notification sent to " + user.email + if (isSuccess) " successfully" else "in error")
+                                log.debug("Notification sent to " + user.email + if (isSuccess) " successfully" else "in error")
+                            }
                         }
                     }
                 }
@@ -70,8 +67,8 @@ fun Application.main() {
             log.debug("End cron task")
             // every 25 min
             delay(1500000)
-
-
         }
+
     }
+
 }
