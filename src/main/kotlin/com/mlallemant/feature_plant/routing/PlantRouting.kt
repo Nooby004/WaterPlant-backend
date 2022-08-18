@@ -15,7 +15,13 @@ import kotlinx.serialization.Serializable
 import org.koin.ktor.ext.inject
 
 @Serializable
-data class SavePlantRequest(val uuid: String, val name: String, val waterFrequency: Int, val pictureUrl: String)
+data class SavePlantRequest(
+    val uuid: String,
+    val name: String,
+    val waterFrequency: Int,
+    val pictureUrl: String,
+    val wateringNotifyDate: String = ""
+)
 
 @Serializable
 data class AddWaterPlantRequest(val uuid: String, val creationDate: String, val pictureUrl: String)

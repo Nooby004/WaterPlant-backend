@@ -40,7 +40,8 @@ val appModule = module {
             savePlantUseCase = SavePlantUseCase(get()),
             addWateringUseCase = AddWateringUseCase(get()),
             getPlantUseCase = GetPlantUseCase(get()),
-            deletePlantUseCase = DeletePlantUseCase(get())
+            deletePlantUseCase = DeletePlantUseCase(get()),
+            updateWateringNotifyDateUseCase = UpdateWateringNotifyDateUseCase(get())
         )
     }
 

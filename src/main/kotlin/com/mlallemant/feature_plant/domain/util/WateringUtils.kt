@@ -36,5 +36,17 @@ class WateringUtils {
             }
         }
 
+        fun getNumberOfDaySinceLastWateringNotify(plantData: PlantData): Long {
+            plantData.let {
+                return if (plantData.wateringNotifyDate.isEmpty()) {
+                    -1
+                } else {
+                    TimeUnit.MILLISECONDS.toDays(
+                        plantData.wateringNotifyDate.toLong().minus(Calendar.getInstance().timeInMillis)
+                    )
+                }
+            }
+        }
+
     }
 }

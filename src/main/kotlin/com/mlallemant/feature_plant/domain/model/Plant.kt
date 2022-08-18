@@ -14,6 +14,7 @@ object PlantTable : IntIdTable(name = "plant") {
     val name = varchar("name", 100)
     val waterFrequency = integer("water_frequency")
     val pictureUrl = varchar("picture_url", 5000)
+    val wateringNotifyDate = varchar("watering_notify_date", 100)
 }
 
 class Plant(id: EntityID<Int>) : IntEntity(id) {
@@ -24,6 +25,7 @@ class Plant(id: EntityID<Int>) : IntEntity(id) {
     var name by PlantTable.name
     var waterFrequency by PlantTable.waterFrequency
     var pictureUrl by PlantTable.pictureUrl
+    var wateringNotifyDate by PlantTable.wateringNotifyDate
     val waterPlants by WaterPlant referrersOn WaterPlantTable.plant
 
     fun toData(): PlantData {
@@ -32,6 +34,7 @@ class Plant(id: EntityID<Int>) : IntEntity(id) {
             name,
             waterFrequency,
             pictureUrl,
+            wateringNotifyDate,
             waterPlants.toList().map { it.toData() })
     }
 }
@@ -42,5 +45,6 @@ data class PlantData(
     val name: String,
     val waterFrequency: Int,
     val pictureUrl: String,
+    val wateringNotifyDate: String,
     val waterPlants: List<WaterPlantData>
 )

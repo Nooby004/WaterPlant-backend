@@ -10,6 +10,7 @@ import com.mlallemant.feature_plant.domain.model.WaterPlant
 import com.mlallemant.feature_plant.domain.repository.PlantRepository
 import com.mlallemant.feature_plant.routing.AddWaterPlantRequest
 import com.mlallemant.feature_plant.routing.SavePlantRequest
+import java.util.*
 
 class PlantRepositoryImpl : PlantRepository {
 
@@ -66,17 +67,35 @@ class PlantRepositoryImpl : PlantRepository {
         }
     }
 
+    override suspend fun updateWateringNotifyDate(user: User, uuid: String, wateringNotifyDate: String): Unit =
+        dbQuery {
+            val plant = Plant.find {
+                (PlantTable.user eq user.id)
+                (PlantTable.uuid eq uuid)
+            }.firstOrNull()
+
+            plant?.let {
+                it.wateringNotifyDate = wateringNotifyDate
+                it.flush()
+            }
+        }
+
     override suspend fun addWatering(user: User, addWaterPlantRequest: AddWaterPlantRequest): Unit = dbQuery {
         val plant = Plant.find {
             (PlantTable.user eq user.id)
             (PlantTable.uuid eq addWaterPlantRequest.uuid)
         }.firstOrNull() ?: throw Exception("Can't watering an unknown plant")
 
-
         WaterPlant.new {
             this.plant = plant
             this.pictureUrl = addWaterPlantRequest.pictureUrl
             this.creationDate = addWaterPlantRequest.creationDate
+        }
+
+        // reset watering notify date
+        plant.let {
+            it.wateringNotifyDate = Calendar.getInstance().timeInMillis.toString()
+            it.flush()
         }
     }
 }
