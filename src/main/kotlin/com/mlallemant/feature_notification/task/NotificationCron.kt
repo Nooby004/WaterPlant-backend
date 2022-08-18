@@ -50,7 +50,15 @@ fun Application.main() {
                                 val numberOfDaySinceLastWatering = getNumberOfDaySinceLastWateringNotify(plant)
                                 log.debug("User was notified for the plant " + plant.name + " " + numberOfDaySinceLastWatering + " day ago")
 
-                                if (WateringUtils.getNextWateringDay(plant) <= 3L && (numberOfDaySinceLastWatering == -1L || numberOfDaySinceLastWatering >= 1)) {
+                                if (WateringUtils.getNextWateringDay(plant) <= 0L && (numberOfDaySinceLastWatering == -1L || numberOfDaySinceLastWatering >= 1)) {
+
+                                    val message: String = if (numberOfDaySinceLastWatering == -1L) {
+                                        plant.name + " va crever si tu l'arroses pas !"
+                                    } else {
+                                        plant.name + " va vraiment crever si tu l'arroses pas ! Ca fait " + numberOfDaySinceLastWatering + " jour(s) que cette " +
+                                                "malheureuse plante a besoin d'eau :("
+                                    }
+
                                     val isSuccess = oneSignalService.sendNotification(
                                         Notification(
                                             includeExternalUserIds = listOf(user.uuid),
@@ -60,7 +68,7 @@ fun Application.main() {
                                             ),
                                             contents = NotificationMessage(
                                                 en = "Please, water " + plant.name,
-                                                fr = plant.name + " va crever si tu l'arroses pas !"
+                                                fr = message
                                             ),
                                             appId = appId
                                         )
