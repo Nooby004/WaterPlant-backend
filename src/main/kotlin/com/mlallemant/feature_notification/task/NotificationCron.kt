@@ -98,8 +98,8 @@ fun Application.main() {
 
 
             log.debug("End cron task")
-            // every 10 min
-            delay(60 * 1000 * 10)
+            // every 30 min
+            delay(60 * 1000 * 30)
         }
 
     }
