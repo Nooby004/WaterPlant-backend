@@ -25,4 +25,8 @@ class AuthRepositoryImpl : AuthRepository {
         return@dbQuery RegisterResponse(uuid)
     }
 
+    override suspend fun getAllUsers(): List<User> = dbQuery {
+        User.all().toList()
+    }
+
 }

@@ -9,4 +9,6 @@ interface AuthRepository {
 
     suspend fun registerUser(email: String, passwordHash: String): RegisterResponse
 
+    suspend fun getAllUsers(): List<User>
+
 }
