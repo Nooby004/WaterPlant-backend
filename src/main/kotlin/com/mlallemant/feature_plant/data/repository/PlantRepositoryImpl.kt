@@ -55,6 +55,7 @@ class PlantRepositoryImpl : PlantRepository {
                 this.name = savePlantRequest.name
                 this.waterFrequency = savePlantRequest.waterFrequency
                 this.pictureUrl = savePlantRequest.pictureUrl
+                this.wateringNotifyDate = savePlantRequest.wateringNotifyDate
             }
         } else {
             // update
