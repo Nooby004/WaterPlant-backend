@@ -29,7 +29,6 @@ fun Application.main() {
 
         log.debug("Init cron task")
 
-
         while (true) {
 
             try {
