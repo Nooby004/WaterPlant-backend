@@ -8,6 +8,7 @@ import com.mlallemant.feature_identification.routing.configureIdentificationRout
 import com.mlallemant.feature_notification.di.notificationModule
 import com.mlallemant.feature_plant.domain.di.plantModule
 import com.mlallemant.feature_plant.routing.configurePlantRouting
+import com.mlallemant.plugins.configureDefaultRouting
 import com.mlallemant.plugins.configureMonitoring
 import com.mlallemant.plugins.configureSecurity
 import com.mlallemant.plugins.configureSerialization
@@ -29,6 +30,7 @@ fun Application.module() {
     configureMonitoring()
     configureSecurity()
     DatabaseFactory.init()
+    configureDefaultRouting()
     configureAuthRouting()
     configurePlantRouting()
     configureIdentificationRouting()
