@@ -49,15 +49,11 @@ fun Application.main() {
                                     WateringUtils.getNumberOfDaySinceLastWateringNotify(plant)
                                 log.debug("User was notified for the plant " + plant.name + " " + numberOfDaySinceLastWatering + " day ago")
 
-                                if (WateringUtils.getNextWateringDay(plant) <= 0L && (numberOfDaySinceLastWatering == -1L || numberOfDaySinceLastWatering >= 1)) {
+                                val nextWateringDay = WateringUtils.getNextWateringDay(plant)
+                                log.debug("Next watering for the plant " + plant.name + " is in " + nextWateringDay + " day")
 
-                                    val message: String = if (numberOfDaySinceLastWatering == -1L) {
-                                        plant.name + " va crever si tu l'arroses pas !"
-                                    } else {
-                                        plant.name + " va vraiment crever si tu l'arroses pas ! Ca fait " + numberOfDaySinceLastWatering + " jour(s) que cette " +
-                                                "malheureuse plante a besoin d'eau :("
-                                    }
-
+                                if (nextWateringDay <= 0L && (numberOfDaySinceLastWatering == -1L || numberOfDaySinceLastWatering >= 1)) {
+                                    val message: String = plant.name + " va crever si tu l'arroses pas !"
                                     val isSuccess = oneSignalService.sendNotification(
                                         Notification(
                                             includeExternalUserIds = listOf(user.uuid),
