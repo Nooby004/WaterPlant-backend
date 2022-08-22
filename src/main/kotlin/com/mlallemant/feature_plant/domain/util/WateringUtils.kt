@@ -42,7 +42,7 @@ class WateringUtils {
                     -1
                 } else {
                     TimeUnit.MILLISECONDS.toDays(
-                        plantData.wateringNotifyDate.toLong().minus(Calendar.getInstance().timeInMillis)
+                        Calendar.getInstance().timeInMillis.minus(plantData.wateringNotifyDate.toLong())
                     )
                 }
             }

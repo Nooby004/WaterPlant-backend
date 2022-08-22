@@ -6,7 +6,6 @@ import com.mlallemant.feature_notification.data.remote.dto.Notification
 import com.mlallemant.feature_notification.data.remote.dto.NotificationMessage
 import com.mlallemant.feature_plant.domain.use_case.PlantUseCases
 import com.mlallemant.feature_plant.domain.util.WateringUtils
-import com.mlallemant.feature_plant.domain.util.WateringUtils.Companion.getNumberOfDaySinceLastWateringNotify
 import com.typesafe.config.ConfigFactory
 import io.ktor.server.application.*
 import io.ktor.server.config.*
@@ -46,7 +45,8 @@ fun Application.main() {
                         if (plants.isNotEmpty()) {
                             plants.forEach { plant ->
 
-                                val numberOfDaySinceLastWatering = getNumberOfDaySinceLastWateringNotify(plant)
+                                val numberOfDaySinceLastWatering =
+                                    WateringUtils.getNumberOfDaySinceLastWateringNotify(plant)
                                 log.debug("User was notified for the plant " + plant.name + " " + numberOfDaySinceLastWatering + " day ago")
 
                                 if (WateringUtils.getNextWateringDay(plant) <= 0L && (numberOfDaySinceLastWatering == -1L || numberOfDaySinceLastWatering >= 1)) {
