@@ -43,7 +43,10 @@ fun Application.configureIdentificationRouting() {
                 val response = identificationUseCases.identifyPlantUseCase(request)
 
                 if (response.isNullOrEmpty()) {
-                    call.respond(ErrorResponse("Cannot identify the plant, please retry by adding more detailed photo "))
+                    call.respond(
+                        HttpStatusCode.NoContent,
+                        ErrorResponse("Cannot identify the plant, please retry by adding more detailed photo ")
+                    )
                 }
 
                 call.respond(SuccessResponse(response))
